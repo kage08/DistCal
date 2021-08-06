@@ -412,6 +412,31 @@ def get_y_hat(t_list, density_hat):
 
     return y_hat
 
+def get_y_var(t_list, density_hat):
+
+    n_y, n_t = numpy.shape(density_hat)
+
+    t_list_hat = (t_list[0:-1] + t_list[1:]) / 2
+
+    y_hat = get_y_hat(t_list, density_hat)
+    y_var = numpy.zeros(n_y)
+
+    if len(t_list_hat) == n_t:
+
+        for i in range(0, n_y):
+
+            y_py = ((t_list_hat-y_hat[i])**2) * density_hat[i, :]
+
+            y_var[i] = scipy.integrate.trapz(y_py, t_list_hat)
+
+    else:
+        for i in range(0, n_y):
+
+            y_py = ((t_list - y_hat[i])**2) * density_hat[i, :]
+
+            y_var[i] = scipy.integrate.trapz(y_py, t_list)
+
+    return y_var
 
 def get_se(y, y_hat):
 
